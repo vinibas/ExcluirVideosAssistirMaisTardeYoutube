@@ -18,8 +18,10 @@ namespace ExcluirVideosAssistirMaisTardeYoutube
             var conta = Console.ReadLine();
 
             Console.WriteLine("Digite os números das linhas que você deseja excluir:");
-            Console.WriteLine("(Separe por vírgula e crie intervalos com hífen, ex: 1,2-5,6)");
-            var digitos = ObterDigitos(Console.ReadLine().Replace(" ", string.Empty));
+            Console.WriteLine("(Separe por vírgula e crie intervalos com hífen. " +
+                "Use um asterisco como prefixo para não excluir algum vídeo." +
+                " Ex: 1,2-10,*3,*5-8,12)");
+            var digitos = ConversorDeDigitosDeVideos.ObterDigitos(Console.ReadLine());
             
             var driverConfig = new WebDriverConfig();
 
@@ -50,33 +52,6 @@ namespace ExcluirVideosAssistirMaisTardeYoutube
                 driverConfig.Dispose();
             }
             Console.ReadKey();
-        }
-
-        static int[] ObterDigitos(string textoInserido)
-        {
-            var itensPorVirgula = textoInserido.Split(',');
-
-            var itensEmIntervalo = new List<int>();
-            for (var i = 0; i < itensPorVirgula.Length; i++)
-            {
-                var range = itensPorVirgula[i]
-                    .Split('-')
-                    .Select(p => int.Parse(p))
-                    .ToArray();
-
-                if (range.Length == 1)
-                    continue;
-
-                for (var j = range[0]; j <= range[1]; j++)
-                    itensEmIntervalo.Add(j);
-            }
-
-            return itensPorVirgula
-                .Where(p => !p.Contains('-'))
-                .Select(p => int.Parse(p))
-                .Union(itensEmIntervalo)
-                .OrderBy(p => p)
-                .ToArray();
         }
 
         static string ReadPassword()
